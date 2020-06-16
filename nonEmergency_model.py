@@ -1,6 +1,7 @@
 import random
 import numpy as np
 from keras.models import Model, Sequential
+from keras.callbacks import EarlyStopping
 from keras.layers import Dense
 import pandas as pd
 import itertools
@@ -90,10 +91,11 @@ if M == 'ML':
     X = df[['Q1','Q2','Q3','Q4','C']]
     y = df['R']
     model = Sequential()
+    es = EarlyStopping('accuracy', patience = 2)
     model.add(Dense(6, input_dim=5, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    model.fit(X, y, epochs=200)
+    model.fit(X, y, epochs=200, callbacks = [es])
     _, accuracy = model.evaluate(X, y)
     print('Accuracy: %.2f' % (accuracy*100))
 
